@@ -3,7 +3,7 @@ import { deleteController, updateController, getAllController, getByIdController
 
 export const userRouter = Router()
 
-userRouter.get('/get-all', getAllController.run.bind(getAllController));
+userRouter.get('/all', getAllController.run.bind(getAllController));
 
 userRouter.get('/:id', getByIdController.run.bind(getByIdController));
 

@@ -5,12 +5,12 @@ import { db } from "../../../db/config/config";
 export class MySQLMedicalHistoryRepository implements MedicalHistoryRepository {
     
     async getAll(): Promise<MedicalHistory[]> {
-        const [rows] = await db.execute(`SELECT * FROM historial_medico`);
+        const [rows] = await db.execute(`SELECT * FROM medical_history`);
         return rows as MedicalHistory[];
     }
 
     async getById(id: number): Promise<MedicalHistory | null> {
-        const [rows] = await db.execute(`SELECT * FROM historial_medico WHERE id = ?`, [id]);
+        const [rows] = await db.execute(`SELECT * FROM medical_history WHERE id = ?`, [id]);
         const histories = rows as MedicalHistory[];
         return histories.length > 0 ? histories[0] : null;
     }
@@ -19,7 +19,7 @@ export class MySQLMedicalHistoryRepository implements MedicalHistoryRepository {
         const { id_usuario, condicion, date } = history;
         
         const [result] = await db.execute(
-            `INSERT INTO historial_medico (id_usuario, condicion, date) VALUES (?, ?, ?)`,
+            `INSERT INTO medical_history (id_usuario, condicion, date) VALUES (?, ?, ?)`,
             [id_usuario, condicion, date]
         );
     
@@ -28,13 +28,12 @@ export class MySQLMedicalHistoryRepository implements MedicalHistoryRepository {
         const insertedHistory = await this.getById(insertId);
         return insertedHistory!;
     }
-    
 
     async update(id: number, historyData: Partial<MedicalHistory>): Promise<MedicalHistory | null> {
         const fields = Object.keys(historyData).map(key => `${key} = ?`).join(', ');
         const values = Object.values(historyData);
         await db.execute(
-            `UPDATE historial_medico SET ${fields}, update_at = ? WHERE id = ?`,
+            `UPDATE medical_history SET ${fields}, update_at = ? WHERE id = ?`,
             [...values, new Date(), id]
         );
         
@@ -42,7 +41,12 @@ export class MySQLMedicalHistoryRepository implements MedicalHistoryRepository {
     }
 
     async delete(id: number): Promise<boolean> {
-        const [result] = await db.execute(`DELETE FROM historial_medico WHERE id = ?`, [id]);
+        const [result] = await db.execute(`DELETE FROM medical_history WHERE id = ?`, [id]);
         return (result as any).affectedRows > 0;
+    }
+
+    async getByUserId(userId: number): Promise<MedicalHistory[]> {
+        const [rows] = await db.execute(`SELECT * FROM medical_history WHERE id_usuario = ?`, [userId]);
+        return rows as MedicalHistory[];
     }
 }

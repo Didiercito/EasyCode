@@ -1,13 +1,10 @@
+// src/service/socket/WebSocketService.ts
 import { Socket, io } from "socket.io-client";
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-export default interface WebsocketService {
-  sendData(event: string, data: any): Promise<void>;
-}
-
-export default class ExternalWebsocketIo implements WebsocketService {
+export default class WebSocketService {
   private socket: Socket;
 
   constructor() { 

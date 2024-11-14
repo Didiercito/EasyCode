@@ -1,6 +1,5 @@
 import { User } from "../../user/domain/user";
 import { AuthRepository } from "../domain/authRepository";
-import { TokenService } from "../../middleware/auth";
 import bcrypt from 'bcrypt';
 
 
@@ -9,7 +8,7 @@ export class RegisterUseCase {
         private authRepository: AuthRepository,
     ) {}
 
-    async execute(userData: User): Promise<{ user: User, token: string } | Error> {
+    async execute(userData: User): Promise<{ user: User } | Error> {
         const existingUser = await this.authRepository.getByEmail(userData.correo);
         if (existingUser) {
             throw new Error('El correo electrónico ya está registrado');
@@ -28,8 +27,7 @@ export class RegisterUseCase {
             throw new Error('Error al registrar el usuario');
         }
 
-        const token = TokenService.generateToken(savedUser.id);
-
-        return { user: savedUser, token };
+        return { user: savedUser };
     }
 }
+

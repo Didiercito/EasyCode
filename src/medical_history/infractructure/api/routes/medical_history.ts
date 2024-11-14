@@ -1,16 +1,18 @@
 import { Router } from "express";
-import { deleteController, updateController, getAllController, getByIdController, registerController } from "../dependencies/dependencies";
+import { deleteController, updateController, getAllController, getByIdController, registerController, getByUserIdController} from "../dependencies/dependencies";
+import { TokenService } from "../../../../middleware/auth";
+
+export const medicalHistoryRoutes = Router();
 
 
-export const medical_history = Router();
+medicalHistoryRoutes.get('/all', TokenService.authenticateToken,getAllController.run.bind(getAllController));
 
+medicalHistoryRoutes.get('/medical-history/:id', TokenService.authenticateToken,getByIdController.run.bind(getByIdController));
 
-medical_history.get('/all', getAllController.run.bind(getAllController));
+medicalHistoryRoutes.get('/find/:id', TokenService.authenticateToken, getByUserIdController.handle.bind(getByUserIdController));
 
-medical_history.get('/medical-history/:id', getByIdController.run.bind(getByIdController));
+medicalHistoryRoutes.post('/register-condition', TokenService.authenticateToken,registerController.run.bind(registerController));
 
-medical_history.post('/register-condition', registerController.run.bind(registerController));
+medicalHistoryRoutes.put('/update/:id', TokenService.authenticateToken,updateController.run.bind(updateController));
 
-medical_history.put('/update/:id', updateController.run.bind(updateController));
-
-medical_history.delete('/delete/:id', deleteController.run.bind(deleteController));
+medicalHistoryRoutes.delete('/delete/:id', TokenService.authenticateToken,deleteController.run.bind(deleteController));

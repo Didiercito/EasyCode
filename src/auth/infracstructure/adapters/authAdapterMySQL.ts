@@ -7,7 +7,7 @@ export class AuthAdapterMySQL implements AuthRepository {
     async register(user: User): Promise<User | null> {
         try {
             const [result] = await db.execute(
-                `INSERT INTO usuarios (nombre, apellido_p, apellido_m, edad, genero, estado, municipio, correo, contrasena, telefono, peso, altura, create_at, update_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                `INSERT INTO users (nombre, apellido_p, apellido_m, edad, genero, estado, municipio, correo, contrasena, telefono, peso, altura, create_at, update_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     user.nombre,
                     user.apellido_p,
@@ -37,7 +37,7 @@ export class AuthAdapterMySQL implements AuthRepository {
     async login(correo: string, contrasena: string): Promise<User | null> {
         try {
             const [rows] = await db.execute(
-                `SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?`,
+                `SELECT * FROM users WHERE correo = ? AND contrasena = ?`,
                 [correo, contrasena]
             );
 
@@ -52,7 +52,7 @@ export class AuthAdapterMySQL implements AuthRepository {
     async getByEmail(email: string): Promise<User | null> {
         try {
             const [rows] = await db.execute(
-                `SELECT * FROM usuarios WHERE correo = ?`,
+                `SELECT * FROM users WHERE correo = ?`,
                 [email]
             );
 

@@ -13,10 +13,13 @@ export class LoginController {
             if (result instanceof Error) {
                 res.status(401).json({ message: result.message });
             } else {
-                res.status(200).json(result);  
+                res.status(200).json({
+                    token: result.token,   
+                    id: result.id         
+                });
             }
         } catch (error) {
-            res.status(500).json({ message: "Error en el servidor",});
+            res.status(500).json({ message: "Error en el servidor" });
         }
     }
-}
+} 

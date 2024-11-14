@@ -1,10 +1,12 @@
-import { RegisterUseCase } from "../../../application/registerUseCase";
+import { RegisterUseCase } from "../../../application/registerUseCase"; 
 import { GetByIdUseCase } from "../../../application/getByIdUseCase";
+import { GetByUserIdUseCase } from "../../../application/getByUserIdUseCase";
 import { GetAllUseCase } from "../../../application/getAllUseCase";
 import { DeleteUseCase } from "../../../application/deleteUseCase";
 import { UpdateUseCase } from "../../../application/updateUseCase";
 import { RegisterController } from "../controllers/registerController";
 import { GetByIdController } from "../controllers/getByIdController";
+import { GetByUserIdController } from "../controllers/getByUserIdController";
 import { GetAllController } from "../controllers/getAllController";
 import { DeleteController } from "../controllers/deleteController";
 import { UpdateController } from "../controllers/updateController";
@@ -17,9 +19,11 @@ const getByIdUseCase = new GetByIdUseCase(emergencyContactsRepository);
 const getAllUseCase = new GetAllUseCase(emergencyContactsRepository);
 const deleteUseCase = new DeleteUseCase(emergencyContactsRepository);
 const updateUseCase = new UpdateUseCase(emergencyContactsRepository);
+const getByUserIdUseCase = new GetByUserIdUseCase(emergencyContactsRepository);
 
 export const registerController = new RegisterController(registerUseCase);
 export const getByIdController = new GetByIdController(getByIdUseCase);
 export const getAllController = new GetAllController(getAllUseCase);
 export const deleteController = new DeleteController(deleteUseCase);
 export const updateController = new UpdateController(updateUseCase);
+export const getByUserIdController = new GetByUserIdController(getByUserIdUseCase);

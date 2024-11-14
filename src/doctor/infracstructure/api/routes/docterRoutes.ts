@@ -1,16 +1,18 @@
 import { Router } from "express";
-import { registerDoctorController, deleteDoctorController, getAllDoctorController, getByIdDoctorController,  updateDoctorController} from "../dependencies/dependencies";
-
+import { registerDoctorController, deleteDoctorController, getAllDoctorController, getByIdDoctorController,  updateDoctorController, getByUserIdController} from "../dependencies/dependencies";
+import { TokenService } from "../../../../middleware/auth";
 
 export const doctorRoutes = Router()
 
 
-doctorRoutes.get('/get-all', getAllDoctorController.run.bind(getAllDoctorController));
+doctorRoutes.get('/all', TokenService.authenticateToken,getAllDoctorController.run.bind(getAllDoctorController));
 
-doctorRoutes.get('/:id', getByIdDoctorController.run.bind(getByIdDoctorController));
+doctorRoutes.get('/:id', TokenService.authenticateToken,getByIdDoctorController.run.bind(getByIdDoctorController));
 
-doctorRoutes.post('/register', registerDoctorController.run.bind(registerDoctorController));
+doctorRoutes.get('/find/:id', TokenService.authenticateToken, getByUserIdController.handle.bind(getByUserIdController))
 
-doctorRoutes.delete('/delete/:id', deleteDoctorController.run.bind(deleteDoctorController));
+doctorRoutes.post('/register', TokenService.authenticateToken,registerDoctorController.run.bind(registerDoctorController));
 
-doctorRoutes.put('/update/:id', updateDoctorController.run.bind(updateDoctorController));
+doctorRoutes.delete('/delete/:id', TokenService.authenticateToken,deleteDoctorController.run.bind(deleteDoctorController));
+
+doctorRoutes.put('/update/:id', TokenService.authenticateToken,updateDoctorController.run.bind(updateDoctorController));

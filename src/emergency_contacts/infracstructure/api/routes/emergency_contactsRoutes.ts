@@ -1,15 +1,19 @@
-import e, { Router } from "express";
-import { registerController, deleteController, getAllController, getByIdController, updateController } from "../dependencies/dependencies";
+import  { Router } from "express";
+import { registerController, deleteController, getAllController, getByIdController, updateController, getByUserIdController} from "../dependencies/dependencies";
+import { TokenService } from "../../../../middleware/auth";
 
-export const emergencyContacts = Router();
+
+export const emergencyContactsRoutes = Router();
 
 
-emergencyContacts.get('/get-all', getAllController.run.bind(getAllController));
+emergencyContactsRoutes.get('/all',TokenService.authenticateToken,getAllController.run.bind(getAllController));
 
-emergencyContacts.get('/:id', getByIdController.run.bind(getByIdController));
+emergencyContactsRoutes.get('/:id', TokenService.authenticateToken,getByIdController.run.bind(getByIdController));
 
-emergencyContacts.post('/register', registerController.run.bind(registerController));
+emergencyContactsRoutes.get('/find/:id', TokenService.authenticateToken, getByUserIdController.handle.bind(getByUserIdController));
 
-emergencyContacts.delete('/delete/:id', deleteController.run.bind(deleteController));
+emergencyContactsRoutes.post('/register', TokenService.authenticateToken,registerController.run.bind(registerController));
 
-emergencyContacts.put('/update/:id', updateController.run.bind(updateController));
+emergencyContactsRoutes.delete('/delete/:id', TokenService.authenticateToken,deleteController.run.bind(deleteController));
+
+emergencyContactsRoutes.put('/update/:id', TokenService.authenticateToken,updateController.run.bind(updateController)); 
