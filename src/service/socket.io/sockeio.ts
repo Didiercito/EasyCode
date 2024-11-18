@@ -1,4 +1,3 @@
-// src/service/socket/WebSocketService.ts
 import { Socket, io } from "socket.io-client";
 import dotenv from 'dotenv';
 
@@ -7,13 +6,14 @@ dotenv.config();
 export default class WebSocketService {
   private socket: Socket;
 
-  constructor() { 
+  constructor() {
     this.socket = io('http://localhost:8082', {
       extraHeaders: {
-        'authorization': `Bearer ${process.env.WS_SECRET_KEY as string}`
-      }
+        'authorization': `Bearer ${process.env.WS_SECRET_KEY as string}`,
+      },
     });
 
+    // Listeners para eventos WebSocket
     this.socket.on('connect', () => {
       console.log('Conectado al servidor WS');
     });
@@ -24,6 +24,18 @@ export default class WebSocketService {
 
     this.socket.on('disconnect', () => {
       console.log('Desconectado del servidor WebSocket');
+    });
+
+    this.socket.on('heartRate', (data) => {
+      console.log('Datos recibidos en WebSocket (Heart Rate):', data);
+    });
+
+    this.socket.on('bodyTemperature', (data) => {
+      console.log('Datos recibidos en WebSocket (Body Temperature):', data);
+    });
+
+    this.socket.on('oximeter', (data) => {
+      console.log('Datos recibidos en WebSocket (Oximeter):', data);
     });
   }
 

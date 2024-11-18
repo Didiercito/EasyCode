@@ -7,7 +7,7 @@ dotenv.config();
 declare global {
     namespace Express {
         interface Request {
-            user?: JwtPayload | string;
+            user?: { id: number } & JwtPayload;
         }
     }
 }
@@ -18,16 +18,15 @@ export class TokenService {
     static generateToken(id: number): string {
         const payload = { id };
         const options = { expiresIn: '1h' };
-
         return jwt.sign(payload, TokenService.secretKey, options);
     }
 
-    static verifyToken(token: string): string | JwtPayload {
-        try {
-            return jwt.verify(token, TokenService.secretKey);
-        } catch (error) {
-            throw new Error('Token no válido');
+    static verifyToken(token: string): JwtPayload {
+        const decoded = jwt.verify(token, TokenService.secretKey) as JwtPayload;
+        if (typeof decoded === 'object' && 'id' in decoded) {
+            return decoded;
         }
+        throw new Error('Invalid token payload');
     }
 
     static authenticateToken(req: Request, res: Response, next: NextFunction): void {
@@ -36,12 +35,18 @@ export class TokenService {
 
         if (!token) {
              res.status(401).json({ message: 'Token no proporcionado' });
+             return;
         }
 
         try {
-            const decoded = TokenService.verifyToken(token as string);
-            req.user = decoded;
-            console.log(decoded)
+            const decoded = TokenService.verifyToken(token);
+            req.user = decoded as { id: number } & JwtPayload;
+
+            if (!req.user.id) {
+                 res.status(403).json({ message: 'Token no válido: ID faltante' });
+                 return;
+            }
+
             next();
         } catch (error) {
             res.status(403).json({ message: 'Token no válido' });

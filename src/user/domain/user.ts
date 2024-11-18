@@ -1,6 +1,3 @@
-import { Doctor } from "../../doctor/domain/doctor";
-import { EmergencyContacts } from "../../emergency_contacts/domain/emergency_contacts";
-import { MedicalHistory } from "../../medical_history/domain/medical_history";
 
 export class User {
     public id: number;
@@ -17,10 +14,7 @@ export class User {
     public peso: number;
     public altura: number;
     public create_at: Date;
-    public update_at: Date;
-    public doctors: Doctor[];
-    public emergencyContacts: EmergencyContacts[];
-    public medicalHistory: MedicalHistory[];
+    public update_at: Date;;
 
     constructor(
         id: number,
@@ -37,10 +31,7 @@ export class User {
         peso: number,
         altura: number,
         create_at: Date,
-        update_at: Date,
-        doctors: Doctor[] = [],                      
-        emergencyContacts: EmergencyContacts[] = [], 
-        medicalHistory: MedicalHistory[] = []        
+        update_at: Date,     
     ) {
         this.id = id;
         this.nombre = nombre;
@@ -57,8 +48,6 @@ export class User {
         this.altura = altura;
         this.create_at = create_at;
         this.update_at = update_at;
-        this.doctors = doctors;
-        this.emergencyContacts = emergencyContacts;
-        this.medicalHistory = medicalHistory;
+
     }
 }

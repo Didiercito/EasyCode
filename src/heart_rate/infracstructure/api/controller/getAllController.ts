@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { GetAllUseCase } from "../../../application/getByIdUseCase";
+import { GetAllUseCase } from "../../../application/getAllUseCase";
 
 export class GetAllController {
     constructor(private getAllUseCase: GetAllUseCase) {}

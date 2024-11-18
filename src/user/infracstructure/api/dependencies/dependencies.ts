@@ -6,9 +6,9 @@ import { DeleteController } from "../controllers/deleteController";
 import { GetAllController } from "../controllers/getAllController";
 import { GetByIdController } from "../controllers/getByIdController";
 import { UpdateController } from "../controllers/updateController";
-import { MySQLUserRepository } from "../../adapters/userAdapterMySQL";
+import { MySQLUserAdapter } from "../../adapters/userAdapterMySQL";
 
-const userRepository = new MySQLUserRepository();
+const userRepository = new MySQLUserAdapter();
 
 const deleteUserUseCase = new DeleteUserUseCase(userRepository);
 const getAllUseCase = new GetAllUseCase(userRepository);

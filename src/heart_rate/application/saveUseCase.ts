@@ -5,6 +5,8 @@ export class SaveUseCase {
     constructor(private heartRateRepository: HeartRateRepository) {}
 
     async execute(data: HeartRate): Promise<void> {
+
+
         await this.heartRateRepository.save(data);
     }
 }

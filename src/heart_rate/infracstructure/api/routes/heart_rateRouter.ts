@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { saveHeartRateController, getAllHeartRatesController, getHeartRateByIdController } from "../dependencies/dependencies";
+import { saveHeartRateController, getAllHeartRatesController,  updateController} from "../dependencies/dependencies";
+
 
 export const HeartRateRouter = Router();
 
@@ -7,4 +8,5 @@ HeartRateRouter.get('/all', getAllHeartRatesController.handle.bind(getAllHeartRa
 
 HeartRateRouter.post('/save', saveHeartRateController.handle.bind(saveHeartRateController));
 
-HeartRateRouter.get('/:id', getHeartRateByIdController.handle.bind(getHeartRateByIdController));
+HeartRateRouter.put('/update/:id', updateController.handle.bind(updateController));
+

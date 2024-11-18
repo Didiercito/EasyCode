@@ -1,31 +1,72 @@
-import { HeartRateRepository } from "../../domain/hate_rateRepository";
-import { HeartRate } from "../../domain/heart_rate";
-import { db } from "../../../db/config/config";
+import { HeartRate } from '../../domain/heart_rate';
+import { HeartRateRepository } from '../../domain/hate_rateRepository';
+import { pool } from '../../../db/config/config';
+import mysql2 from 'mysql2';
 
 export class MySQLHeartRateRepository implements HeartRateRepository {
+    public async save(data: HeartRate): Promise<void> {
+        const connection = await pool.getConnection();
+        try {
+            const query = `
+                INSERT INTO heart_rate (id, ECG, createdAt, updatedAt)
+                VALUES (1, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE
+                ECG = VALUES(ECG),
+                updatedAt = VALUES(updatedAt)
+            `;
+            await connection.execute(query, [
+                data.ECG,           
+                data.createdAt,     
+                data.updatedAt      
+            ]);
+        } catch (error) {
+            console.error("Error al guardar o actualizar datos en la base de datos:", error);
+            throw error;
+        } finally {
+            connection.release();
+        }
+    }
     
-    async getAll(): Promise<HeartRate[]> {
-        const [rows] = await db.execute(`SELECT * FROM heart_rate`);
-        return rows as HeartRate[];
+    
+
+    public async getAll(): Promise<HeartRate[]> {
+        const connection = await pool.getConnection();
+        try {
+            const [rows] = await connection.execute('SELECT id, ECG, createdAt, updatedAt FROM heart_rate');
+            return (rows as mysql2.RowDataPacket[]).map(
+                (row) =>
+                    new HeartRate(
+                        row.id,
+                        row.ECG,          
+                        new Date(row.createdAt),
+                        new Date(row.updatedAt)
+                    )
+            );
+        } catch (error) {
+            console.error("Error al obtener datos de la base de datos:", error);
+            throw error;
+        } finally {
+            connection.release();
+        }
     }
 
-    async getDataById(id: number): Promise<HeartRate | null> {
-        const [rows] = await db.execute(`SELECT * FROM heart_rate WHERE id = ?`, [id]);
-        const heartRates = rows as HeartRate[];
-        return heartRates.length > 0 ? heartRates[0] : null;
-    }
-
-    async save(data: HeartRate): Promise<void> {
-        const { id_usuario, BPM: heartRateData } = data;
-        
-        await db.execute(
-            `INSERT INTO heart_rate (id_usuario, data) VALUES (?, ?)`,
-            [id_usuario, heartRateData]
-        );
-        
-        console.log('Datos de frecuencia cardíaca guardados correctamente:', {
-            id_usuario,
-            heartRateData
-        });
+    public async update(id: number, data: Partial<HeartRate>): Promise<void> {
+        const connection = await pool.getConnection();
+        try {
+            // Aquí cambiamos 'heartRate' por 'ECG'
+            const query =
+                'UPDATE heart_rate SET ECG = ?, updatedAt = ? WHERE id = ?';  // Usamos ECG aquí
+            const now = new Date();
+            await connection.execute(query, [
+                data.ECG,           // Usamos ECG aquí
+                now,
+                id,
+            ]);
+        } catch (error) {
+            console.error("Error al actualizar datos en la base de datos:", error);
+            throw error;
+        } finally {
+            connection.release();
+        }
     }
 }

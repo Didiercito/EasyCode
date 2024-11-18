@@ -7,9 +7,21 @@ export class SaveController {
 
     async handle(req: Request, res: Response): Promise<void> {
         try {
-            const { id_usuario, data, id } = req.body; 
-            const heartRateData = new HeartRate(id,id_usuario, data);
+            const { data } = req.body;
 
+            if (!data) {
+                res.status(400).json({ error: "Invalid request data." });
+                return;
+            }
+
+            console.log("Datos recibidos en SaveController:", data);  
+
+            const rawECG = data;
+            const bpm = this.convertToBPM(rawECG);
+
+            const now = new Date();
+
+            const heartRateData = new HeartRate(0, bpm, now, now);
             await this.saveUseCase.execute(heartRateData);
 
             res.status(201).json({ message: "Heart rate data saved successfully." });
@@ -17,5 +29,14 @@ export class SaveController {
             console.error("Error saving heart rate data:", error);
             res.status(500).json({ error: "Failed to save heart rate data." });
         }
+    }
+
+    private convertToBPM(rawECG: number): number {
+        const minRawECG = 0;
+        const maxRawECG = 1023;
+        const minBPM = 60;
+        const maxBPM = 100;
+
+        return ((rawECG - minRawECG) * (maxBPM - minBPM)) / (maxRawECG - minRawECG) + minBPM;
     }
 }

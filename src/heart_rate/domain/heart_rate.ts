@@ -1,11 +1,14 @@
 export class HeartRate {
     public id: number;
-    public id_usuario: number;
-    public BPM: number;
-
-    constructor(id: number ,id_usuario: number, BPM: number) {
-        this.id = id;
-        this.id_usuario = id_usuario;
-        this.BPM = BPM;
+    public ECG: number;
+    public createdAt: Date;
+    public updatedAt: Date;
+  
+    constructor(id: number, ECG: number, createdAt: Date, updatedAt: Date) {
+      this.id = id;
+      this.ECG = ECG;
+      this.createdAt = createdAt;
+      this.updatedAt = updatedAt;
     }
-}
+  }
+  
