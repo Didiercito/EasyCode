@@ -3,7 +3,6 @@ import { OximeterRepository } from "../../domain/oximeterRepository";
 import { pool } from "../../../db/config/config";
 
 export class MySQLOximeterRepository implements OximeterRepository {
-
     async save(data: Oximeter): Promise<void> {
         const connection = await pool.getConnection();
         const { id, valor, create_at, update_at } = data;
@@ -15,14 +14,13 @@ export class MySQLOximeterRepository implements OximeterRepository {
                 [id, valor, create_at, update_at]
             );
         } catch (error) {
-            console.error("Error al guardar o actualizar los datos del oxímetro:", error);
-            throw new Error("Error al guardar o actualizar los datos del oxímetro");
+            console.error("Error al guardar los datos del oxímetro:", error);
+            throw new Error("Error al guardar los datos del oxímetro");
         } finally {
             connection.release();
         }
     }
 
-    // Obtener todos los oxímetros
     async getAll(): Promise<Oximeter[]> {
         const connection = await pool.getConnection();
         try {
@@ -30,13 +28,12 @@ export class MySQLOximeterRepository implements OximeterRepository {
             return rows as Oximeter[];
         } catch (error) {
             console.error("Error al obtener los oxímetros:", error);
-            return [];
+            throw new Error("Error al obtener los oxímetros");
         } finally {
             connection.release();
         }
     }
 
-    // Actualizar los datos de un oxímetro
     async update(id: number, data: Partial<Oximeter>): Promise<void> {
         const connection = await pool.getConnection();
         try {

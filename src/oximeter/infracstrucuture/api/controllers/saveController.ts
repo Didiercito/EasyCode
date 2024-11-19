@@ -6,13 +6,12 @@ export class SaveController {
 
     async handle(req: Request, res: Response): Promise<void> {
         try {
-            const oximeter = req.body;
-            await this.saveUseCase.execute(oximeter);
-             res.status(201).json({ message: "Data saved successfully" });
-             return;
+            const oximeter = req.body;  
+            await this.saveUseCase.execute(oximeter.valor); 
+            res.status(201).json({ message: "Data saved successfully" });
         } catch (error) {
-             res.status(500).json({ message: "Error saving data"});
-             return;
+            console.error("Error al guardar los datos", error);
+            res.status(500).json({ message: "Error saving data" });
         }
     }
 }

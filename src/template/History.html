@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial Médico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #4A90E2; /* Azul */
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #555;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #e1f5fe; /* Celeste */
+            color: #333;
+        }
+        tr:hover {
+            background-color: #eaf7ff; /* Celeste claro */
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+        }
+        .highlight {
+            color: #4A90E2; /* Azul */
+        }
+        .intro {
+            background-color: #e1f5fe; /* Celeste */
+            padding: 15px;
+            border-left: 5px solid #4A90E2; /* Azul */
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Historial Médico 🏥</h1>
+        
+        <div class="intro">
+            <p>Estimado/a,</p>
+            <p>A continuación se detallan los resultados más recientes de su evaluación médica. Estos datos reflejan su salud en cuanto a <strong>frecuencia cardiaca 💓</strong>, <strong>oxigenación en la sangre 🩸</strong> y <strong>temperatura corporal 🌡️</strong>.</p>
+            <p>Es importante llevar un control de estos parámetros para su bienestar general. A continuación, encontrará los detalles:</p>
+        </div>
+        
+        <h2>Datos del Paciente 🧑‍⚕️</h2>
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <td>{{nombre}} {{apellido_p}} {{apellido_m}}</td>
+            </tr>
+            <tr>
+                <th>Edad</th>
+                <td>{{edad}} años</td>
+            </tr>
+            <tr>
+                <th>Género</th>
+                <td>{{genero}}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{estado}}</td>
+            </tr>
+            <tr>
+                <th>Municipio</th>
+                <td>{{municipio}}</td>
+            </tr>
+            <tr>
+                <th>Peso</th>
+                <td>{{peso}} kg</td>
+            </tr>
+            <tr>
+                <th>Altura</th>
+                <td>{{altura}} cm</td>
+            </tr>
+        </table>
+
+        <h2>Datos del Sensor 🩺</h2>
+        <table>
+            <tr>
+                <th>Frecuencia Cardíaca 💓</th>
+                <td>{{frecuencia_cardiaca}} bpm</td>
+            </tr>
+            <tr>
+                <th>Oxigenación en la Sangre 🩸</th>
+                <td>{{oxigenacion}} %</td>
+            </tr>
+            <tr>
+                <th>Temperatura Corporal 🌡️</th>
+                <td>{{temperatura}} °C</td>
+            </tr>
+        </table>
+
+        <h2>Resumen de la Evaluación Médica 🩺</h2>
+        <p>Este informe fue generado a partir de una serie de mediciones automáticas y manuales realizadas durante su visita. La información obtenida refleja sus condiciones en el momento de la consulta y debe ser considerada para la toma de decisiones sobre su salud.</p>
+        <p>Es fundamental que realice los exámenes periódicos según las recomendaciones de su médico de cabecera, especialmente si nota cambios en su salud.</p>
+
+        <h2>Recomendaciones Generales 📝</h2>
+        <p>Para mejorar su bienestar general, considere los siguientes consejos:</p>
+        <ul>
+            <li>Mantenga una rutina de ejercicio regular para fortalecer su sistema cardiovascular.</li>
+            <li>Asegúrese de mantener una dieta balanceada, rica en frutas, verduras y agua.</li>
+            <li>Evite el consumo excesivo de alcohol y tabaco.</li>
+            <li>Consulte a su médico si nota alguna alteración significativa en su salud.</li>
+        </ul>
+
+        <div class="footer">
+            <p>Si tiene alguna pregunta o inquietud, no dude en ponerse en contacto con nosotros.</p>
+            <p class="highlight">Atentamente,</p>
+            <p class="highlight">Equipo Médico de Salud</p>
+        </div>
+    </div>
+</body>
+</html>

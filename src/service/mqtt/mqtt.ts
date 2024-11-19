@@ -105,18 +105,38 @@ export class MqttService {
     }
   }
 
+
   private async handleOximeter(data: any) {
     if (data.oxygenLevel !== undefined) {
-      console.log(`Nivel de oxígeno recibido: ${data.oxygenLevel}%`);
-      const now = new Date();
-      const oximeterData = new Oximeter(1, data.oxygenLevel, now, now);
-      await this.saveOximeterUseCase.execute(oximeterData);
-      console.log('Nivel de oxígeno guardado correctamente en la base de datos');
-      this.webSocketService.sendData('oximeterData', { valor: data.oxygenLevel });
+        console.log(`Nivel de oxígeno recibido: ${data.oxygenLevel}`);
+
+        // Convertir el nivel de oxígeno a un porcentaje si es necesario
+        const oxygenLevel = parseFloat(data.oxygenLevel.toFixed(2)); 
+        
+        if (isNaN(oxygenLevel)) {
+            console.error('Error: El nivel de oxígeno no es un número válido');
+            return;
+        }
+
+        // Guardar el porcentaje de oxígeno en la base de datos
+        const now = new Date();
+        const oximeterData = new Oximeter(1, oxygenLevel, now, now); // Crear el objeto Oximeter
+        
+        await this.saveOximeterUseCase.execute(oxygenLevel); // Pasar el valor crudo (no el objeto)
+        
+        console.log('Nivel de oxígeno guardado correctamente en la base de datos');
+        
+        // Enviar los datos a través de WebSocket (enviar el porcentaje de oxígeno)
+        this.webSocketService.sendData('oximeterData', { valor: oxygenLevel });
     } else {
-      console.warn('Datos incompletos recibidos para oximetro:', data);
+        console.warn('Datos incompletos recibidos para oxímetro:', data);
     }
-  }
+}
+
+
+
+
+  
 
   private async handleAcelerometer(data: any) {
     if (data.x !== undefined && data.y !== undefined && data.z !== undefined) {
