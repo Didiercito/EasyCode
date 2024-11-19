@@ -37,6 +37,10 @@ export default class WebSocketService {
     this.socket.on('oximeter', (data) => {
       console.log('Datos recibidos en WebSocket (Oximeter):', data);
     });
+
+    this.socket.on('acelerometer', (data) => {
+      console.log('Datos recibidos en WebSocket (Acelerómetro):', data);
+    });
   }
 
   async sendData(event: string, data: any): Promise<void> {

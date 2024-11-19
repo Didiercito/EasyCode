@@ -12,8 +12,10 @@ import { SaveUseCase } from './heart_rate/application/saveUseCase';
 import { MySQLHeartRateRepository } from './heart_rate/infracstructure/adapters/heart_rateAdapterMySQL';
 import { MySQLBodyTemperatureRepository } from './body_temperature/infrasctructure/adapters/body_temperatureAdapterMySQL';
 import { MySQLOximeterRepository } from './oximeter/infracstrucuture/adapters/oximeterAdapterMySQL';
+import { MySQLAcelerometerRepository } from './accelerometer/infrancstructure/adapters/acelerometerAdaptersMySQL';
 import { SaveUseCaseBodyTemperature } from './body_temperature/application/saveUseCase';
 import { SaveUseCaseOximeter } from './oximeter/application/saveUseCase';
+import { SaveAcelerometerUseCase } from './accelerometer/application/saveUseCase';
 import { MqttService } from './service/mqtt/mqtt';
 import { pool } from './db/config/config';
 
@@ -27,15 +29,18 @@ app.use(express.json())
 const heartRateRepository = new MySQLHeartRateRepository();
 const bodyTemperatureRepository = new MySQLBodyTemperatureRepository();
 const oximeterRepository = new MySQLOximeterRepository();
+const acelerometerRepository = new MySQLAcelerometerRepository()
 
 const saveHeartRateUseCase = new SaveUseCase(heartRateRepository);
 const saveBodyTemperatureUseCase = new SaveUseCaseBodyTemperature(bodyTemperatureRepository);
 const saveOximeterUseCase = new SaveUseCaseOximeter(oximeterRepository);
+const saveAcelerometerUseCase = new SaveAcelerometerUseCase(acelerometerRepository)
 
 export const mqttService = new MqttService(
   saveHeartRateUseCase,
   saveBodyTemperatureUseCase,
-  saveOximeterUseCase
+  saveOximeterUseCase,
+  saveAcelerometerUseCase
 );
 
 
