@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { addSensorHistoryController, getAllHistoryController, getHistoryByDateRangeController, getHistoryBySensorTypeController, getHistoryForUserController, getSensorHistoryByIdController, deleteSensorHistoryController, updateSensorHistoryController } from "../dependencies/dependencies";
-
+import { TokenService } from "../../../../middleware/auth";
 
 export const historyRouter = Router()
 
@@ -11,7 +11,7 @@ historyRouter.get('/data-range', getHistoryByDateRangeController.handle.bind(get
 
 historyRouter.get('/sensor-type', getHistoryBySensorTypeController.handle.bind(getHistoryBySensorTypeController));
 
-historyRouter.get('/user/:userId', getHistoryForUserController.handle.bind(getHistoryForUserController));
+historyRouter.get('/user', TokenService.authenticateToken,getHistoryForUserController.handle.bind(getHistoryForUserController));
 
 historyRouter.get('/:id', getSensorHistoryByIdController.handle.bind(getSensorHistoryByIdController))
 

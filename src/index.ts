@@ -11,10 +11,12 @@ import { oximeterRouter } from './oximeter/infracstrucuture/api/routes/oximeterR
 import { acelerometerRouter } from './accelerometer/infrancstructure/api/routes/acelerometerRoutes';
 import { historyRouter } from './history/infracstructure/api/routes/historyRoutes';
 import { SaveUseCase } from './heart_rate/application/saveUseCase';
+import { AddSensorHistoryUseCase } from './history/application/addSensorHistoryUseCase';
 import { MySQLHeartRateRepository } from './heart_rate/infracstructure/adapters/heart_rateAdapterMySQL';
 import { MySQLBodyTemperatureRepository } from './body_temperature/infrasctructure/adapters/body_temperatureAdapterMySQL';
 import { MySQLOximeterRepository } from './oximeter/infracstrucuture/adapters/oximeterAdapterMySQL';
 import { MySQLAcelerometerRepository } from './accelerometer/infrancstructure/adapters/acelerometerAdaptersMySQL';
+import { MySQLSensorHistoryRepository } from './history/infracstructure/adapters/historyAdapterMySQL';
 import { SaveUseCaseBodyTemperature } from './body_temperature/application/saveUseCase';
 import { SaveUseCaseOximeter } from './oximeter/application/saveUseCase';
 import { SaveAcelerometerUseCase } from './accelerometer/application/saveUseCase';
@@ -32,17 +34,20 @@ const heartRateRepository = new MySQLHeartRateRepository();
 const bodyTemperatureRepository = new MySQLBodyTemperatureRepository();
 const oximeterRepository = new MySQLOximeterRepository();
 const acelerometerRepository = new MySQLAcelerometerRepository()
+const historyRepository = new MySQLSensorHistoryRepository()
 
 const saveHeartRateUseCase = new SaveUseCase(heartRateRepository);
 const saveBodyTemperatureUseCase = new SaveUseCaseBodyTemperature(bodyTemperatureRepository);
 const saveOximeterUseCase = new SaveUseCaseOximeter(oximeterRepository);
 const saveAcelerometerUseCase = new SaveAcelerometerUseCase(acelerometerRepository)
+const addSensorHistoryUseCase = new AddSensorHistoryUseCase(historyRepository)
 
 export const mqttService = new MqttService(
   saveHeartRateUseCase,
   saveBodyTemperatureUseCase,
   saveOximeterUseCase,
-  saveAcelerometerUseCase
+  saveAcelerometerUseCase,
+  addSensorHistoryUseCase
 );
 
 

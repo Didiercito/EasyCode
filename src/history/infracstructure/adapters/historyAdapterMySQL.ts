@@ -8,12 +8,12 @@ export class MySQLSensorHistoryRepository implements SensorHistoryRepository {
         const connection = await pool.getConnection();
         try {
             const query = `
-                INSERT INTO sensor_history (sensorType, data, userId, create_at, update_at)
+                INSERT INTO sensor_history (sensorType, sensorValue, userId, create_at, update_at)
                 VALUES (?, ?, ?, ?, ?)
             `;
             const [result] = await connection.execute(query, [
                 sensorHistory.sensorType,
-                JSON.stringify(sensorHistory.data),
+                sensorHistory.sensorValue, // Insertamos el valor del sensor
                 sensorHistory.userId,
                 sensorHistory.create_at,
                 sensorHistory.update_at,
@@ -24,14 +24,14 @@ export class MySQLSensorHistoryRepository implements SensorHistoryRepository {
             return new SensorHistory(
                 insertId,
                 sensorHistory.sensorType,
-                sensorHistory.data,
+                sensorHistory.sensorValue,
                 sensorHistory.userId,
                 sensorHistory.create_at,
                 sensorHistory.update_at
             );
         } catch (error) {
             console.error("Error al agregar un evento de historial de sensor en la base de datos:", error);
-            throw error;
+            throw new Error("Error al guardar el historial del sensor en la base de datos.");
         } finally {
             connection.release();
         }
@@ -45,13 +45,13 @@ export class MySQLSensorHistoryRepository implements SensorHistoryRepository {
         try {
             const query = `
                 UPDATE sensor_history
-                SET sensorType = ?, data = ?, userId = ?, update_at = ?
+                SET sensorType = ?, sensorValue = ?, userId = ?, update_at = ?
                 WHERE id = ?
             `;
             const now = new Date();
             await connection.execute(query, [
                 sensorHistory.sensorType,
-                JSON.stringify(sensorHistory.data),
+                sensorHistory.sensorValue, // Actualizamos el valor del sensor
                 sensorHistory.userId,
                 now,
                 id,
@@ -60,7 +60,7 @@ export class MySQLSensorHistoryRepository implements SensorHistoryRepository {
             return new SensorHistory(
                 id,
                 sensorHistory.sensorType,
-                sensorHistory.data,
+                sensorHistory.sensorValue,
                 sensorHistory.userId,
                 sensorHistory.create_at,
                 now
@@ -87,7 +87,7 @@ export class MySQLSensorHistoryRepository implements SensorHistoryRepository {
             return new SensorHistory(
                 row.id,
                 row.sensorType,
-                JSON.parse(row.data),
+                row.sensorValue, // Aquí ya obtenemos el valor como FLOAT
                 row.userId,
                 new Date(row.create_at),
                 new Date(row.update_at)
@@ -110,7 +110,7 @@ export class MySQLSensorHistoryRepository implements SensorHistoryRepository {
                 new SensorHistory(
                     row.id,
                     row.sensorType,
-                    JSON.parse(row.data),
+                    row.sensorValue, // Aquí también el valor del sensor es directamente un FLOAT
                     row.userId,
                     new Date(row.create_at),
                     new Date(row.update_at)
@@ -134,7 +134,7 @@ export class MySQLSensorHistoryRepository implements SensorHistoryRepository {
                 new SensorHistory(
                     row.id,
                     row.sensorType,
-                    JSON.parse(row.data),
+                    row.sensorValue, // Al obtener todos los registros también obtenemos el valor como FLOAT
                     row.userId,
                     new Date(row.create_at),
                     new Date(row.update_at)
@@ -171,7 +171,7 @@ export class MySQLSensorHistoryRepository implements SensorHistoryRepository {
                 new SensorHistory(
                     row.id,
                     row.sensorType,
-                    JSON.parse(row.data),
+                    row.sensorValue, // Valor como FLOAT
                     row.userId,
                     new Date(row.create_at),
                     new Date(row.update_at)
@@ -201,7 +201,7 @@ export class MySQLSensorHistoryRepository implements SensorHistoryRepository {
                 new SensorHistory(
                     row.id,
                     row.sensorType,
-                    JSON.parse(row.data),
+                    row.sensorValue, // El valor es un FLOAT
                     row.userId,
                     new Date(row.create_at),
                     new Date(row.update_at)
