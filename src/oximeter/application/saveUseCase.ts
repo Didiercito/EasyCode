@@ -13,17 +13,16 @@ export class SaveUseCaseOximeter {
         return parseFloat(percentage.toFixed(2)); 
     }
 
-    async execute(rawValue: number): Promise<void> {
-        const percentage = this.calculatePercentage(rawValue);
+    async execute(oximeterData: Oximeter): Promise<void> {
+        const percentage = this.calculatePercentage(oximeterData.valor);
 
-        const data: Oximeter = {
-            id: 1,  
-            valor: percentage, 
-            create_at: new Date(),
-            update_at: new Date(),
-        };
+        const updatedOximeterData = new Oximeter(
+            oximeterData.id, 
+            percentage, 
+            oximeterData.create_at, 
+            new Date()
+        );
 
-        await this.oximeterRepository.save(data);
+        await this.oximeterRepository.save(updatedOximeterData);
     }
 }
-

@@ -8,16 +8,18 @@ export class MySQLHeartRateRepository implements HeartRateRepository {
         const connection = await pool.getConnection();
         try {
             const query = `
-                INSERT INTO heart_rate (id, ECG, createdAt, updatedAt)
-                VALUES (1, ?, ?, ?)
+                INSERT INTO heart_rate (id, ECG, BPM, createdAt, updatedAt)
+                VALUES (1, ?, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE
                 ECG = VALUES(ECG),
+                BPM = VALUES(BPM),
                 updatedAt = VALUES(updatedAt)
             `;
             await connection.execute(query, [
-                data.ECG,           
-                data.createdAt,     
-                data.updatedAt      
+                data.ECG,            
+                data.BPM,            
+                data.createdAt,      
+                data.updatedAt       
             ]);
         } catch (error) {
             console.error("Error al guardar o actualizar datos en la base de datos:", error);
@@ -26,18 +28,17 @@ export class MySQLHeartRateRepository implements HeartRateRepository {
             connection.release();
         }
     }
-    
-    
 
     public async getAll(): Promise<HeartRate[]> {
         const connection = await pool.getConnection();
         try {
-            const [rows] = await connection.execute('SELECT id, ECG, createdAt, updatedAt FROM heart_rate');
+            const [rows] = await connection.execute('SELECT id, ECG, BPM, createdAt, updatedAt FROM heart_rate');
             return (rows as mysql2.RowDataPacket[]).map(
                 (row) =>
                     new HeartRate(
                         row.id,
                         row.ECG,          
+                        row.BPM,          
                         new Date(row.createdAt),
                         new Date(row.updatedAt)
                     )
@@ -53,14 +54,20 @@ export class MySQLHeartRateRepository implements HeartRateRepository {
     public async update(id: number, data: Partial<HeartRate>): Promise<void> {
         const connection = await pool.getConnection();
         try {
-            // Aquí cambiamos 'heartRate' por 'ECG'
-            const query =
-                'UPDATE heart_rate SET ECG = ?, updatedAt = ? WHERE id = ?';  // Usamos ECG aquí
+            const query = `
+                UPDATE heart_rate 
+                SET 
+                    ECG = ?, 
+                    BPM = ?, 
+                    updatedAt = ? 
+                WHERE id = ?
+            `;
             const now = new Date();
             await connection.execute(query, [
-                data.ECG,           // Usamos ECG aquí
-                now,
-                id,
+                data.ECG,            
+                data.BPM,            
+                now,                 
+                id
             ]);
         } catch (error) {
             console.error("Error al actualizar datos en la base de datos:", error);
