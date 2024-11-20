@@ -214,4 +214,6 @@ export class MySQLSensorHistoryRepository implements SensorHistoryRepository {
             connection.release();
         }
     }
+
+    
 }

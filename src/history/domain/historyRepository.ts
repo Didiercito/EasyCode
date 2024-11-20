@@ -9,4 +9,5 @@ export interface SensorHistoryRepository {
     deleteSensorHistory(id: number): Promise<void>;
     getHistoryBySensorType(sensorType: string): Promise<SensorHistory[]>;
     getHistoryByDateRange(startDate: Date, endDate: Date): Promise<SensorHistory[]>;
+    // sendHistoryByEmail(userId: number, email: string): Promise<void>;
 }

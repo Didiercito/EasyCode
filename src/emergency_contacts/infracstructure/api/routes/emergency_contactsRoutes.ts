@@ -8,7 +8,7 @@ export const emergencyContactsRoutes = Router();
 
 emergencyContactsRoutes.get('/all',TokenService.authenticateToken,getAllController.run.bind(getAllController));
 
-emergencyContactsRoutes.get('/:id', TokenService.authenticateToken,getByIdController.run.bind(getByIdController));
+emergencyContactsRoutes.get('/:id',getByIdController.run.bind(getByIdController));
 
 emergencyContactsRoutes.get('/find/:id', TokenService.authenticateToken, getByUserIdController.handle.bind(getByUserIdController));
 
