@@ -7,7 +7,7 @@ export const doctorRoutes = Router()
 
 doctorRoutes.get('/all', TokenService.authenticateToken,getAllDoctorController.run.bind(getAllDoctorController));
 
-doctorRoutes.get('/:id', TokenService.authenticateToken,getByIdDoctorController.run.bind(getByIdDoctorController));
+doctorRoutes.get('/:id', getByIdDoctorController.run.bind(getByIdDoctorController));
 
 doctorRoutes.get('/find/:id', TokenService.authenticateToken, getByUserIdController.handle.bind(getByUserIdController))
 
