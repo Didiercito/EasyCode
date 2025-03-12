@@ -1,6 +1,6 @@
+import { Worker } from 'worker_threads';
 import { User } from "../../user/domain/user";
 import { AuthRepository } from "../domain/authRepository";
-import bcrypt from 'bcrypt';
 
 
 export class RegisterUseCase {
@@ -14,11 +14,11 @@ export class RegisterUseCase {
             throw new Error('El correo electrónico ya está registrado');
         }
 
-        const hashedPassword = await bcrypt.hash(userData.contrasena, 10);
+        const hashedPassword = await this.hashPassword(userData.contrasena);
 
         const newUser = {
             ...userData,
-            contrasena: hashedPassword, 
+            contrasena: hashedPassword,
         };
 
         const savedUser = await this.authRepository.register(newUser);
@@ -29,5 +29,15 @@ export class RegisterUseCase {
 
         return { user: savedUser };
     }
-}
 
+    private async hashPassword(password: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const worker = new Worker('../../worker/passwordWorker.ts', { workerData: { password } });
+            worker.on('message', resolve);
+            worker.on('error', reject);
+            worker.on('exit', (code) => {
+                if (code !== 0) reject(new Error(`Worker stopped with exit code ${code}`));
+            });
+        });
+    }
+}
