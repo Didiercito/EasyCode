@@ -1,8 +1,11 @@
-const { parentPort } = require('worker_threads');
-const bcrypt = require('bcrypt');
+import { parentPort, workerData } from 'worker_threads';
+import bcrypt from 'bcrypt';
 
-parentPort.on('message', async (data: any) => {
-    const { password } = data;
+const { password } = workerData;
+
+const hashPassword = async () => {
     const hashedPassword = await bcrypt.hash(password, 10);
-    parentPort.postMessage(hashedPassword);
-});
+    parentPort?.postMessage(hashedPassword);
+};
+
+hashPassword();

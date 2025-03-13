@@ -1,7 +1,7 @@
 import { Worker } from 'worker_threads';
+import path from 'path'; 
 import { User } from "../../user/domain/user";
 import { AuthRepository } from "../domain/authRepository";
-
 
 export class RegisterUseCase {
     constructor(
@@ -32,7 +32,11 @@ export class RegisterUseCase {
 
     private async hashPassword(password: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            const worker = new Worker('../../worker/passwordWorker.ts', { workerData: { password } });
+            const workerPath = path.join(__dirname, '../../worker/passwordWorker.ts');
+            const worker = new Worker(workerPath, { 
+                workerData: { password },
+                execArgv: ['-r', 'ts-node/register'], 
+            });
             worker.on('message', resolve);
             worker.on('error', reject);
             worker.on('exit', (code) => {
