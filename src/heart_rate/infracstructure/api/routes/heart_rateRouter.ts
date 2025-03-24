@@ -6,7 +6,14 @@ export const HeartRateRouter = Router();
 
 HeartRateRouter.get('/all', getAllHeartRatesController.handle.bind(getAllHeartRatesController));
 
-HeartRateRouter.post('/save', saveHeartRateController.handle.bind(saveHeartRateController));
+HeartRateRouter.post('/save', async (req, res, next) => {
+    try {
+        await saveHeartRateController.handle(req, res);
+    } catch (error) {
+        next(error);
+    }
+});
+
 
 HeartRateRouter.put('/update/:id', updateController.handle.bind(updateController));
 

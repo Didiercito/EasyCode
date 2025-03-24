@@ -4,23 +4,29 @@ import { SaveUseCase } from "../../../application/saveUseCase";
 export class SaveController {
     constructor(private saveUseCase: SaveUseCase) {}
 
-    async handle(req: Request, res: Response): Promise<void> {
+    async handle(req: Request, res: Response): Promise<Response> {
         try {
             const { ECG } = req.body;
 
-            if (typeof ECG !== "number" || ECG <= 0) {
-                res.status(400).json({ error: "Invalid or missing ECG value." });
-                return;
+            if (ECG === undefined || ECG === null || typeof ECG !== "number" || ECG < 200 || ECG > 5000) {
+                console.error("Invalid or missing ECG value:", ECG);
+                return res.status(400).json({ error: "Invalid or missing ECG value." });
             }
 
-            console.log("ECG recibido en SaveController:", ECG);
 
             await this.saveUseCase.execute({ ECG });
 
-            res.status(201).json({ message: "Heart rate data saved successfully." });
+            const BPM = this.saveUseCase.convertToBPM(ECG);
+
+            return res.status(201).json({ 
+                message: "Heart rate data saved successfully.",
+                ECG,
+                BPM
+            });
         } catch (error) {
             console.error("Error saving heart rate data:", error);
-            res.status(500).json({ error: "Failed to save heart rate data." });
+
+            return res.status(500).json({ error: "Failed to save heart rate data." });
         }
     }
 }

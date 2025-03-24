@@ -7,13 +7,14 @@ export default class WebSocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io('http://localhost:8082', {
+    console.log('Token de autorización:', process.env.WS_SECRET_KEY);  
+
+    this.socket = io(process.env.WEBSOCKET_URL as string, {
       extraHeaders: {
-        'authorization': `Bearer ${process.env.WS_SECRET_KEY as string}`,
+        'Authorization': `Bearer ${process.env.WS_SECRET_KEY}`,
       },
     });
 
-    // Listeners para eventos WebSocket
     this.socket.on('connect', () => {
       console.log('Conectado al servidor WS');
     });

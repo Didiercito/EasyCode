@@ -3,6 +3,14 @@ import path from 'path';
 import { User } from "../../user/domain/user";
 import { AuthRepository } from "../domain/authRepository";
 
+
+
+/*
+Aqui agrege concurrencia con Hilos de Trabajo (Worker Threads) para realizar el hash de la contraseña de forma asíncrona.
+Que se encuentra en Worker
+*/
+
+
 export class RegisterUseCase {
     constructor(
         private authRepository: AuthRepository,
