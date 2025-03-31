@@ -4,7 +4,7 @@ import { pool } from '../../../db/config/config';
 import mysql2 from 'mysql2';
 
 export class MySQLHeartRateRepository implements HeartRateRepository {
-    public async save(data: HeartRate): Promise<HeartRate> {
+    public async save(data: HeartRate): Promise<void> {
         const connection = await pool.getConnection();
         try {
             const query = `
@@ -21,16 +21,6 @@ export class MySQLHeartRateRepository implements HeartRateRepository {
                 data.createdAt,      
                 data.updatedAt       
             ]);
-
-            // Devolver el objeto HeartRate actualizado o creado
-            return new HeartRate(
-                1,              // Suponiendo que ID es 1, si es auto-incremental cambia esto según lo necesites.
-                data.ECG,      
-                data.BPM,      
-                data.createdAt,  
-                data.updatedAt  
-            );
-
         } catch (error) {
             console.error("Error al guardar o actualizar datos en la base de datos:", error);
             throw error;
@@ -43,8 +33,6 @@ export class MySQLHeartRateRepository implements HeartRateRepository {
         const connection = await pool.getConnection();
         try {
             const [rows] = await connection.execute('SELECT id, ECG, BPM, createdAt, updatedAt FROM heart_rate');
-            
-            // Mapeamos los resultados a objetos HeartRate y los devolvemos
             return (rows as mysql2.RowDataPacket[]).map(
                 (row) =>
                     new HeartRate(
@@ -63,7 +51,7 @@ export class MySQLHeartRateRepository implements HeartRateRepository {
         }
     }
 
-    public async update(id: number, data: Partial<HeartRate>): Promise<HeartRate> {
+    public async update(id: number, data: Partial<HeartRate>): Promise<void> {
         const connection = await pool.getConnection();
         try {
             const query = `
@@ -81,15 +69,6 @@ export class MySQLHeartRateRepository implements HeartRateRepository {
                 now,                 
                 id
             ]);
-
-            // Devolver el objeto HeartRate actualizado
-            return new HeartRate(
-                id,              // ID del objeto actualizado
-                data.ECG || 0,  // Si no se actualiza ECG, se mantiene el valor anterior
-                data.BPM  || 0, // Si no se actualiza BPM, se mantiene el valor anterior
-                now,            // Usamos el timestamp actual para updatedAt
-                now             // Usamos el timestamp actual para updatedAt
-            );
         } catch (error) {
             console.error("Error al actualizar datos en la base de datos:", error);
             throw error;

@@ -62,13 +62,14 @@ app.use('/api/v1/oximeter', oximeterRouter);
 app.use('/api/v1/acelerometer', acelerometerRouter);
 app.use('/api/v1/sensor-history', historyRouter)
 
-export const server = app.listen(port, async () => {
-  try {
-    await pool;
-    console.log('MySQL connected');
-    console.log(`Server running in port:  http://localhost:${port}`);
-  } catch (error) {
-    console.error('Error initializing database:', error);
-    process.exit(1);
-  }
-});
+export const startServer = async () => {
+    try {
+      await pool;
+      console.log('MySQL connected');
+      console.log(`Server running in port:  http://localhost:${port}`);
+      app.listen(port);
+    } catch (error) {
+      console.error('Error initializing database:', error);
+      process.exit(1);
+    }
+  };

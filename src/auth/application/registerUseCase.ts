@@ -1,14 +1,6 @@
-import { Worker } from 'worker_threads';
-import path from 'path'; 
 import { User } from "../../user/domain/user";
 import { AuthRepository } from "../domain/authRepository";
-
-
-
-/*
-Aqui agrege concurrencia con Hilos de Trabajo (Worker Threads) para realizar el hash de la contraseña de forma asíncrona.
-Que se encuentra en Worker
-*/
+import bcrypt from 'bcrypt';
 
 
 export class RegisterUseCase {
@@ -22,11 +14,11 @@ export class RegisterUseCase {
             throw new Error('El correo electrónico ya está registrado');
         }
 
-        const hashedPassword = await this.hashPassword(userData.contrasena);
+        const hashedPassword = await bcrypt.hash(userData.contrasena, 10);
 
         const newUser = {
             ...userData,
-            contrasena: hashedPassword,
+            contrasena: hashedPassword, 
         };
 
         const savedUser = await this.authRepository.register(newUser);
@@ -36,20 +28,5 @@ export class RegisterUseCase {
         }
 
         return { user: savedUser };
-    }
-
-    private async hashPassword(password: string): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const workerPath = path.join(__dirname, '../../worker/passwordWorker.ts');
-            const worker = new Worker(workerPath, { 
-                workerData: { password },
-                execArgv: ['-r', 'ts-node/register'], 
-            });
-            worker.on('message', resolve);
-            worker.on('error', reject);
-            worker.on('exit', (code) => {
-                if (code !== 0) reject(new Error(`Worker stopped with exit code ${code}`));
-            });
-        });
     }
 }

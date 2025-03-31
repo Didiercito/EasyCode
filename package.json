@@ -4,6 +4,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev src/index.ts",
+    "dev:cluster": "ts-node src/cluster/master.ts",
+    "script": "ts-node src/scripts/loadtest.ts",
     "tsc": "tsc",
     "test": "jest",
     "benchmark": "ts-node src/test/benchmark.ts"
@@ -21,10 +23,12 @@
     "express": "^4.21.1",
     "handlebars": "^4.7.8",
     "jsonwebtoken": "^9.0.2",
+    "loadtest": "^8.2.0",
     "mqtt": "^5.10.1",
     "mysql2": "^3.11.4",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.16",
+    "piscina": "^4.9.2",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1"
   },

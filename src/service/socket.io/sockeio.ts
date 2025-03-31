@@ -7,7 +7,6 @@ export default class WebSocketService {
   private socket: Socket;
 
   constructor() {
-    console.log('Token de autorización:', process.env.WS_SECRET_KEY);  
 
     this.socket = io(process.env.WEBSOCKET_URL as string, {
       extraHeaders: {
