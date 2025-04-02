@@ -25,25 +25,29 @@ export default class WebSocketService {
       console.log("Desconectado del servidor WebSocket");
     });
 
-    this.socket.on("temperatura", (data) => {
+    // Escuchar eventos emitidos por el servidor WebSocket
+    this.socket.on("bodyTemperature", (data) => {
       console.log("Datos recibidos en WebSocket (Temperatura):", data);
     });
 
-    this.socket.on("ritmoCardiaco", (data) => {
+    this.socket.on("heartRate", (data) => {
       console.log("Datos recibidos en WebSocket (Ritmo Cardiaco):", data);
     });
 
-    this.socket.on("oxigenacion", (data) => {
+    this.socket.on("oximeter", (data) => {
       console.log("Datos recibidos en WebSocket (Oxigenación):", data);
     });
   }
 
   async sendData(event: string, data: any): Promise<void> {
     return new Promise((resolve, reject) => {
+      console.log(`Enviando datos al servidor WS (${event}):`, data);
       this.socket.emit(event, data, (error: any) => {
         if (error) {
+          console.error(`Error al enviar datos (${event}):`, error);
           reject(error);
         } else {
+          console.log(`Datos enviados con éxito (${event})`);
           resolve();
         }
       });

@@ -75,12 +75,27 @@ export class MqttService {
   }
 
   private async handleHeartRate(data: any) {
-    if (data.ECG !== undefined) {
+    if (data.heart_rate !== undefined) {
+      const now = new Date();
+      const userId = 1;
+      const heartRateData = new HeartRate(0, data.heart_rate, 0, now, now);
+      const sensorType = "HeartRate";
+  
+      try {
+        await this.saveHeartRateUseCase.execute(heartRateData);
+        await this.addSensorHistoryUseCase.execute(sensorType, data.heart_rate, userId);
+        console.log("Ritmo cardíaco y historial guardados correctamente");
+        
+        this.webSocketService.sendData("heartRateData", { ECG: data.heart_rate });
+      } catch (error) {
+        console.error("Error al guardar datos de ritmo cardíaco:", error);
+      }
+    } else if (data.ECG !== undefined) {
       const now = new Date();
       const userId = 1;
       const heartRateData = new HeartRate(0, data.ECG, 0, now, now);
       const sensorType = "HeartRate";
-
+  
       try {
         await this.saveHeartRateUseCase.execute(heartRateData);
         await this.addSensorHistoryUseCase.execute(sensorType, data.ECG, userId);
@@ -91,37 +106,47 @@ export class MqttService {
       }
     }
   }
-
+  
   private async handleBodyTemperature(data: any) {
-    if (data.temperature !== undefined) {
+    const temp = data.temperature !== undefined ? data.temperature : data.valor;
+    
+    if (temp !== undefined) {
       const now = new Date();
       const userId = 1;
-      const bodyTemperatureData = new BodyTemperature(0, data.temperature, now, now);
+      const bodyTemperatureData = new BodyTemperature(0, temp, now, now);
       const sensorType = "BodyTemperature";
-
+  
       try {
         await this.saveBodyTemperatureUseCase.execute(bodyTemperatureData);
-        await this.addSensorHistoryUseCase.execute(sensorType, data.temperature, userId);
+        await this.addSensorHistoryUseCase.execute(sensorType, temp, userId);
         console.log("Temperatura corporal y historial guardados correctamente");
-        this.webSocketService.sendData("bodyTemperatureData", { temperature: data.temperature });
+        
+        // El servidor espera "valor", pero usamos "temperature" por consistencia
+        this.webSocketService.sendData("bodyTemperatureData", { temperature: temp });
       } catch (error) {
         console.error("Error al guardar temperatura corporal:", error);
       }
     }
   }
-
+  
   private async handleOximeter(data: any) {
-    const oxygenLevel = data.valor ?? data.oxygenLevel;
+    // Adaptar el formato del mensaje MQTT al formato esperado por el servidor WebSocket  
+    const oxygenLevel = data.valor !== undefined ? data.valor : 
+                        data.oxygenLevel !== undefined ? data.oxygenLevel : 
+                        data.oxygen_level;
+    
     if (typeof oxygenLevel === "number") {
       const now = new Date();
       const userId = 1;
       const oximeterData = new Oximeter(0, oxygenLevel, now, now);
       const sensorType = "Oximeter";
-
+  
       try {
         await this.saveOximeterUseCase.execute(oximeterData);
         await this.addSensorHistoryUseCase.execute(sensorType, oxygenLevel, userId);
         console.log("Nivel de oxígeno y historial guardados correctamente");
+        
+        // Usamos el formato esperado por el WebSocketService
         this.webSocketService.sendData("oximeterData", { oxygenLevel });
       } catch (error) {
         console.error("Error al guardar datos del oxímetro:", error);
