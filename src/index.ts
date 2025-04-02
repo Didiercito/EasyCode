@@ -19,7 +19,6 @@ import { MySQLAcelerometerRepository } from './accelerometer/infrancstructure/ad
 import { MySQLSensorHistoryRepository } from './history/infracstructure/adapters/historyAdapterMySQL';
 import { SaveUseCaseBodyTemperature } from './body_temperature/application/saveUseCase';
 import { SaveUseCaseOximeter } from './oximeter/application/saveUseCase';
-import { SaveAcelerometerUseCase } from './accelerometer/application/saveUseCase';
 import { MqttService } from './service/mqtt/mqtt';
 import { pool } from './db/config/config';
 
@@ -39,16 +38,15 @@ const historyRepository = new MySQLSensorHistoryRepository()
 const saveHeartRateUseCase = new SaveUseCase(heartRateRepository);
 const saveBodyTemperatureUseCase = new SaveUseCaseBodyTemperature(bodyTemperatureRepository);
 const saveOximeterUseCase = new SaveUseCaseOximeter(oximeterRepository);
-const saveAcelerometerUseCase = new SaveAcelerometerUseCase(acelerometerRepository)
 const addSensorHistoryUseCase = new AddSensorHistoryUseCase(historyRepository)
 
 export const mqttService = new MqttService(
   saveHeartRateUseCase,
   saveBodyTemperatureUseCase,
-  saveOximeterUseCase,
-  saveAcelerometerUseCase,
+  saveOximeterUseCase, 
   addSensorHistoryUseCase
 );
+
 
 
 app.use('/api/v1/user', userRouter);
